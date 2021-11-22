@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+    <title>H8-Final Project 1</title>
+</head>
+
+<body>
+    <div class="form">
+        <form action="{{url_for('predict')}}" method="post">
+            <img src="{{url_for('static',filename ='src/hacktiv-logo.png')}}" width ="180px" height="100px" alt="">
+            <h1>Price Prediction</h1>
+            <select name="merk" required="required" onchange="inputMerk(this)">
+                <option selected disabled>Merk</option>
+                <option value="lyft">Lyft</option>
+                <option value="uber">Uber</option>
+            </select>
+            <input type="number" step=".01" name="distance" placeholder="distance" required="required" />
+            <input type="number" step=".01" name="surge_multiplier" placeholder="surge_multiplier" id="inputSurge"
+                required="required" />
+            <!--
+                karena di fitur name kategori, kita bikin select option
+                terus nilainya dikasih berurutan supaya nanti nge encodenya gampang
+            -->
+            <select name="name" id="inputName" required="required">
+                <option selected disabled>Name</option>
+            </select>
+            <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
+            <p class="message">{{ prediction_text }}</p>
+        </form>
+    </div>
+    <script>
+        function inputMerk(selectObject) {
+            let merk = selectObject.value;
+            let x = document.getElementById("inputSurge");
+            let y = document.getElementById("inputName");
+
+            while (y.options.length) {
+                y.remove(0);
+            }
+
+            var opt = new Option("Name", "", true, false);
+            y.options.add(opt);
+
+            y.getElementsByTagName("option")[0].disabled = true;
+
+            let option = {
+                'lyft': ['Shared', 'Lux', 'Lyft', 'Lux Black XL', 'Lift XL', 'Lux Black'],
+                'uber': ['UberXL', 'Black', 'UberX', 'WAV', 'Black SUV', 'UberPool']
+            };
+
+            if (merk == 'uber') {
+                x.style.display = "none";
+                x.value = 1;
+            } else {
+                x.style.display = "block";
+                x.value = '';
+            }
+
+            for (var i = 0; i < option[merk].length; i++) {
+                var opt = new Option(option[merk][i], i + 1);
+                y.options.add(opt);
+            }
+        }
+    </script>
+</body>
+
+</html>
